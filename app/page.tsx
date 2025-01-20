@@ -13,19 +13,24 @@ const outfit = Outfit({
   variable: '--font-outfit',
 });
 
-// Load Space Grotesk for headings (as a replacement for Clash Display)
+// Load Space Grotesk for headings
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   variable: '--font-space',
 });
 
-const TypeWriter = ({ words, speed = 150, delay = 3000 }) => {
-  const [index, setIndex] = useState(0);
-  const [subIndex, setSubIndex] = useState(0);
-  const [reverse, setReverse] = useState(false);
-  const [blink, setBlink] = useState(true);
+interface TypeWriterProps {
+  words: string[];
+  speed?: number;
+  delay?: number;
+}
 
-  // Blink effect
+const TypeWriter: React.FC<TypeWriterProps> = ({ words, speed = 150, delay = 3000 }) => {
+  const [index, setIndex] = useState<number>(0);
+  const [subIndex, setSubIndex] = useState<number>(0);
+  const [reverse, setReverse] = useState<boolean>(false);
+  const [blink, setBlink] = useState<boolean>(true);
+
   useEffect(() => {
     const timeout2 = setTimeout(() => {
       setBlink((prev) => !prev);
@@ -33,7 +38,6 @@ const TypeWriter = ({ words, speed = 150, delay = 3000 }) => {
     return () => clearTimeout(timeout2);
   }, [blink]);
 
-  // Typing effect
   useEffect(() => {
     if (subIndex === words[index].length + 1 && !reverse) {
       setReverse(true);
@@ -60,22 +64,34 @@ const TypeWriter = ({ words, speed = 150, delay = 3000 }) => {
   );
 };
 
+interface Project {
+  title: string;
+  description: string;
+  tech: string[];
+  link: string;
+  color: string;
+}
+
+interface SocialLink {
+  icon: React.ElementType;
+  link: string;
+  color: string;
+}
+
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [hoveredProject, setHoveredProject] = useState(null);
+  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
 
-  // Add mouse position tracking for gradient interaction
   useEffect(() => {
-    const updateMousePosition = (e) => {
+    const updateMousePosition = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
     window.addEventListener('mousemove', updateMousePosition);
     return () => window.removeEventListener('mousemove', updateMousePosition);
   }, []);
-  
-  
-  const projects = [
+
+  const projects: Project[] = [
     {
       title: "Project 1",
       description: "A revolutionary web application",
@@ -99,11 +115,17 @@ export default function Home() {
     }
   ];
 
-  const roles = [
+  const roles: string[] = [
     "Competitive Programmer",
     "Machine Learning Enthusiast",
     "Problem Solver",
     "Tech Enthusiast"
+  ];
+
+  const socialLinks: SocialLink[] = [
+    { icon: Github, link: "https://github.com", color: "from-purple-400 to-pink-400" },
+    { icon: Linkedin, link: "https://linkedin.com", color: "from-blue-400 to-cyan-400" },
+    { icon: Mail, link: "mailto:contact@example.com", color: "from-emerald-400 to-teal-400" }
   ];
 
   const container = {
@@ -198,7 +220,7 @@ export default function Home() {
                 href={`#${item.toLowerCase()}`}
                 className="relative nav-link text-white/80 hover:text-white transition-colors duration-300"
                 whileHover={{ scale: 1.05 }}
-                variants={item}
+                variants={container}
               >
                 <span>{item}</span>
                 <motion.span
